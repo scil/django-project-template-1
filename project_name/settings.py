@@ -9,8 +9,6 @@ https://docs.djangoproject.com/en/2.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.1/ref/settings/
 """
-import json
-import os
 
 import environ
 
@@ -18,11 +16,6 @@ root = environ.Path(__file__) - 3  # three folder back (/a/b/c/ - 3 = /)
 env = environ.Env(DEBUG=(bool, False), )  # set default values and casting
 environ.Env.read_env()  # reading .env file
 
-import sentry_sdk
-from sentry_sdk.integrations.django import DjangoIntegration
-
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = root()
 
 # Quick-start development settings - unsuitable for production
@@ -35,6 +28,8 @@ SECRET_KEY = env('DJANGO_SECRET_KEY')
 DEBUG = env('DJANGO_DEBUG')
 
 DEBUG_TOOLBAR_ENABLE = env('DJANGO_DEBUG_TOOLBAR_ENABLE')
+
+COMPRESS_ENABLED = env('DJANGO_COMPRESS_ENABLED', not DEBUG)
 
 ALLOWED_HOSTS = [
     '*',
@@ -49,9 +44,36 @@ USE_I18N = env('DJANGO_USE_I18N')
 
 USE_L10N = True
 
+# Internationalization
+# https://docs.djangoproject.com/en/2.1/topics/i18n/
+# When support for time zones is enabled, Django stores datetime information in UTC in the database, uses time-zone-aware datetime objects internally, and translates them to the end user’s time zone in templates and forms.
+# This is handy if your users live in more than one time zone and you want to display datetime information according to each user’s wall clock.
+# https://docs.djangoproject.com/en/2.1/topics/i18n/timezones/
+USE_TZ = True
+
+#  default time zone
+# TIME_ZONE = 'Asia/Shanghai'
+TIME_ZONE = 'UTC'
+
+# it provides a fallback language
+# LANGUAGE_CODE = 'zh-Hans'
+
+from django.utils.translation import ugettext_lazy as _
+
+LANGUAGES = (
+    ('en', _('English')),
+    ('zh-cn', _('Chinese')),
+    # ('zh', '简体中文'),
+    # ('zh-cn', '简体中文'),
+    # ('zh-tw', '繁體中文'),
+    # ('de', _('German')),
+)
+
+
+
 # Application definition
 
-INSTALLED_APPS = [
+_INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -61,33 +83,28 @@ INSTALLED_APPS = [
 
     # Third party apps
     'django_extensions',
-    "compressor",
+    "compressor" if COMPRESS_ENABLED else None,
     'debug_toolbar' if DEBUG_TOOLBAR_ENABLE else None,
 ]
+INSTALLED_APPS = list(filter(None.__ne__, _INSTALLED_APPS))
 
-MIDDLEWARE = [
+_MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    # https://docs.djangoproject.com/en/2.1/topics/i18n/translation/#how-django-discovers-language-preference
+    'django.middleware.locale.LocaleMiddleware' if USE_I18N else None,
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    #  include the Debug Toolbar middleware as early as possible in the list. However, it must come after any other middleware that encodes the response’s content, such as GZipMiddleware.
+    # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html
+    'debug_toolbar.middleware.DebugToolbarMiddleware' if DEBUG_TOOLBAR_ENABLE else None,
 ]
-if DEBUG_TOOLBAR_ENABLE:
-    MIDDLEWARE = MIDDLEWARE + [
-        #  include the Debug Toolbar middleware as early as possible in the list. However, it must come after any other middleware that encodes the response’s content, such as GZipMiddleware.
-        # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html
-        'debug_toolbar.middleware.DebugToolbarMiddleware',
+MIDDLEWARE = list(filter(None.__ne__, _MIDDLEWARE))
 
-    ]
-
-if USE_I18N:
-    MIDDLEWARE = [y
-                  for i, x in enumerate(MIDDLEWARE)
-                  for y in (('django.middleware.locale.LocaleMiddleware', x)
-                            if MIDDLEWARE[i - 1] == 'django.contrib.sessions.middleware.SessionMiddleware'
-                            else (x,))]
 
 # https://django-debug-toolbar.readthedocs.org
 DEBUG_TOOLBAR_CONFIG = {
@@ -153,30 +170,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Internationalization
-# https://docs.djangoproject.com/en/2.1/topics/i18n/
-# When support for time zones is enabled, Django stores datetime information in UTC in the database, uses time-zone-aware datetime objects internally, and translates them to the end user’s time zone in templates and forms.
-# This is handy if your users live in more than one time zone and you want to display datetime information according to each user’s wall clock.
-# https://docs.djangoproject.com/en/2.1/topics/i18n/timezones/
-USE_TZ = True
-
-#  default time zone
-# TIME_ZONE = 'Asia/Shanghai'
-TIME_ZONE = 'UTC'
-
-# it provides a fallback language
-# LANGUAGE_CODE = 'zh-Hans'
-
-from django.utils.translation import ugettext_lazy as _
-
-LANGUAGES = (
-    ('en', _('English')),
-    ('zh-cn', _('Chinese')),
-    # ('zh', '简体中文'),
-    # ('zh-cn', '简体中文'),
-    # ('zh-tw', '繁體中文'),
-    # ('de', _('German')),
-)
 
 public_root = root.path('public/')
 
@@ -200,11 +193,14 @@ STATICFILES_DIRS = (
 #     }
 STATIC_ROOT = public_root('static')
 
-STATICFILES_FINDERS = (
+_STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'django.contrib.staticfiles.finders.FileSystemFinder',
-    'compressor.finders.CompressorFinder',
+
+
+    'compressor.finders.CompressorFinder' if COMPRESS_ENABLED else None,
 )
+STATICFILES_FINDERS = list(filter(None.__ne__, _STATICFILES_FINDERS))
 
 # Using Argon2 with Django https://docs.djangoproject.com/en/2.1/topics/auth/passwords/#using-argon2-with-django
 PASSWORD_HASHERS = [
@@ -245,12 +241,16 @@ REST_FRAMEWORK = {
 }
 
 # Sentry
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
 SENTRY_DSN = env('SENTRY_DSN')
 if SENTRY_DSN:
     sentry_sdk.init(
         dsn=SENTRY_DSN,
         integrations=[DjangoIntegration()],
     )
+
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
