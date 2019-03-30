@@ -12,16 +12,67 @@ This is a simple Django 2.0+ project template with my preferred setup. Most Djan
 - Procfile for running gunicorn with New Relic's Python agent.
 - PostgreSQL database support with psycopg2.
 
+## Features added by scil
+
+- Django-environ
+- add env var DJANGO_DEBUG_TOOLBAR_ENABLE,  so it's possible to use DJANGO_DEBUG='yes' without debug_toolbar
+- add dir project_templates which holds templates used by whole project
+- systemd unit file to run pipenv and gunicorn with socket. 
+
+###  .env vars
+
+- DJANGO_DEBUG_TOOLBAR_ENABLE='yes': enable debug-toolbar
+
+- DJANGO_USE_I18N='yes' : set USE_I18N=True and add middleware 'django.middleware.locale.LocaleMiddleware'
+
+### run gunicorn by pipenv
+```bash
+sudo /usr/local/bin/pipenv run gunicorn  --access-logfile -  --pid /run/gunicorn_${project_name}/pid   --bind unix:/run/gunicorn_${project_name}/socket   ${project_name}.wsgi:application
+curl --unix-socket /run/gunicorn_${project_name}/socket <a url like mysite.test/about/>
+```
+
+### use Systemd. 
+```bash
+# nginx conf see: http://docs.gunicorn.org/en/stable/deploy.html#systemd
+#
+# 1. replace `User=vagrant`  with your user whoes home dir is used by pipenv
+sed -i "s/User=vagrant/User=$USER/" conf/systemd/systemd.conf 
+# 2. publish systemd unit file
+sudo cp -f conf/systemd/systemd.conf /usr/lib/systemd/system/gunicorn.$project_name.service
+sudo cp -f conf/systemd/systemd.socket.conf /usr/lib/systemd/system/gunicorn.$project_name.socket
+# 3. start 
+sudo systemctl enable gunicorn.$project_name
+sudo systemctl start gunicorn.$project_name
+sudo systemctl status gunicorn.$project_name
+
+```
+
 ## How to install
 
 ```bash
+project_name=<project_name>
+
+# if using mysql
+$ sudo apt-get install libmysqlclient-dev
+
 $ django-admin.py startproject \
-  --template=https://github.com/key/django-project-template/archive/master.zip \
+  --template=https://github.com/scil/django-project-template-1/archive/master.zip \
   --name=Procfile \
-  --extension=py,md,env \
-  project_name
+  --extension=py,md,html,txt,conf \
+  $project_name
+
+$  cd $project_name
+
 $ mv example.env .env
+
+# edit Pipfile
+#   remove psycopg2 or mysqlclient if PostgreSQL or MySql is not needed
+#   use url= "https://pypi.douban.com/simple"  if in China
+$  vi Pipfile
+
 $ LDFLAGS=-L/usr/local/lib CFLAGS=-I/usr/local/include pipenv install --dev
+
+$  pipenv run python manage.py collectstatic
 ```
 
 ## Environment variables
