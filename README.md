@@ -19,6 +19,7 @@ This is a simple Django 2.0+ project template with my preferred setup. Most Djan
 - Django-environ
 - add dir project_templates which holds templates used by whole project
 - systemd unit file to run pipenv and gunicorn with socket. 
+- [Argon2](https://docs.djangoproject.com/en/2.1/topics/auth/passwords/#using-argon2-with-django) to hash the passwords
 
  .env vars
 - DJANGO_DEBUG_TOOLBAR_ENABLE='yes': enable debug-toolbar.   so it's possible to use DJANGO_DEBUG='yes' without debug_toolbar

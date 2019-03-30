@@ -206,6 +206,7 @@ STATICFILES_FINDERS = (
     'compressor.finders.CompressorFinder',
 )
 
+# Using Argon2 with Django https://docs.djangoproject.com/en/2.1/topics/auth/passwords/#using-argon2-with-django
 PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.Argon2PasswordHasher',
     'django.contrib.auth.hashers.PBKDF2PasswordHasher',

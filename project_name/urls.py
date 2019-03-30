@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, path, re_path
 from django.conf import settings
 
 urlpatterns = [
@@ -35,12 +35,12 @@ if settings.DEBUG:
                                    page_not_found,
                                    server_error)
     urlpatterns += [
-        url(r'^403/$', permission_denied),
-        url(r'^404/$', page_not_found),
-        url(r'^500/$', server_error)
+        re_path(r'^403/$', permission_denied),
+        re_path(r'^404/$', page_not_found),
+        re_path(r'^500/$', server_error)
     ]
-    
-    
+
+
     # Serve media files through Django.
     from django.conf.urls.static import static
     urlpatterns += static(settings.STATIC_URL,
