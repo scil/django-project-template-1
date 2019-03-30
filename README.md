@@ -14,6 +14,7 @@ This is a simple Django 2.0+ project template with my preferred setup. Most Djan
 
 ## Features added by scil
 
+- [direnv](https://github.com/direnv/direnv)
 - Django-environ
 - add dir project_templates which holds templates used by whole project
 - systemd unit file to run pipenv and gunicorn with socket. 
@@ -50,25 +51,31 @@ sudo systemctl status gunicorn.$project_name
 project_name=<project_name>
 
 # if using mysql
-$ sudo apt-get install libmysqlclient-dev
+sudo apt-get install libmysqlclient-dev
+
+sudo apt-get install direnv
 
 sudo pip3 install  pipenv  Django==2.1.7
 
-django-admin.py startproject  --template=https://github.com/scil/django-project-template-1/archive/master.zip  --name=example.env  --extension=py,md,html,txt,conf  $project_name  
+django-admin.py startproject  --template=https://github.com/scil/django-project-template-1/archive/master.zip \
+ --name=example.env  --extension=py,md,html,txt,conf  $project_name  
 
 cd $project_name
-$  cd $project_name
 
-$ mv example.env .env
+mv example.env .env
 
 # edit Pipfile
 #   remove psycopg2 or mysqlclient if PostgreSQL or MySql is not needed
 #   use url= "https://pypi.douban.com/simple"  if in China
-$  vi Pipfile
+vi Pipfile
 
-$ LDFLAGS=-L/usr/local/lib CFLAGS=-I/usr/local/include pipenv install --dev
+LDFLAGS=-L/usr/local/lib CFLAGS=-I/usr/local/include pipenv install --dev
 
-$  pipenv run python manage.py collectstatic
+# use corret  path to your virtualenvs
+echo . /home/vagrant/.local/share/virtualenvs/${project_name}-<...>/bin/activate > .envrc
+direnv allow
+
+pipenv run python manage.py collectstatic
 ```
 
 ## Environment variables
