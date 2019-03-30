@@ -15,23 +15,20 @@ This is a simple Django 2.0+ project template with my preferred setup. Most Djan
 ## Features added by scil
 
 - Django-environ
-- add env var DJANGO_DEBUG_TOOLBAR_ENABLE,  so it's possible to use DJANGO_DEBUG='yes' without debug_toolbar
 - add dir project_templates which holds templates used by whole project
 - systemd unit file to run pipenv and gunicorn with socket. 
 
-###  .env vars
-
-- DJANGO_DEBUG_TOOLBAR_ENABLE='yes': enable debug-toolbar
-
+ .env vars
+- DJANGO_DEBUG_TOOLBAR_ENABLE='yes': enable debug-toolbar.   so it's possible to use DJANGO_DEBUG='yes' without debug_toolbar
 - DJANGO_USE_I18N='yes' : set USE_I18N=True and add middleware 'django.middleware.locale.LocaleMiddleware'
 
-### run gunicorn by pipenv
+run gunicorn by pipenv
 ```bash
 sudo /usr/local/bin/pipenv run gunicorn  --access-logfile -  --pid /run/gunicorn_${project_name}/pid   --bind unix:/run/gunicorn_${project_name}/socket   ${project_name}.wsgi:application
 curl --unix-socket /run/gunicorn_${project_name}/socket <a url like mysite.test/about/>
 ```
 
-### use Systemd. 
+use systemd
 ```bash
 # nginx conf see: http://docs.gunicorn.org/en/stable/deploy.html#systemd
 #
