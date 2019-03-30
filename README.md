@@ -54,7 +54,8 @@ project_name=<project_name>
 # if using mysql
 sudo apt-get install libmysqlclient-dev
 
-# if using WSGI Server [bjoern](https://github.com/jonashaag/bjoern)
+# if using WSGI Server [bjoern](https://github.com/jonashaag/bjoern) which also requires a C compiler  and Python3 development package
+# https://github.com/jonashaag/bjoern/wiki/Installation
 sudo apt-get install -y libev-dev
 
 sudo apt-get install -y direnv

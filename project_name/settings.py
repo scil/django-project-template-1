@@ -13,16 +13,17 @@ import json
 import os
 
 import environ
-root = environ.Path(__file__) - 3 # three folder back (/a/b/c/ - 3 = /)
-env = environ.Env(DEBUG=(bool, False),) # set default values and casting
-environ.Env.read_env() # reading .env file
+
+root = environ.Path(__file__) - 3  # three folder back (/a/b/c/ - 3 = /)
+env = environ.Env(DEBUG=(bool, False), )  # set default values and casting
+environ.Env.read_env()  # reading .env file
 
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-#BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-BASE_DIR= root()
+# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = root()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
@@ -33,7 +34,7 @@ SECRET_KEY = env('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DJANGO_DEBUG')
 
-DEBUG_TOOLBAR_ENABLE = env('DEBUG_TOOLBAR_ENABLE')
+DEBUG_TOOLBAR_ENABLE = env('DJANGO_DEBUG_TOOLBAR_ENABLE')
 
 ALLOWED_HOSTS = [
     '*',
@@ -41,8 +42,12 @@ ALLOWED_HOSTS = [
 
 INTERNAL_IPS = [
     '127.0.0.1',
-     '192.168.1.108',
+    '192.168.1.108',
 ]
+
+USE_I18N = env('DJANGO_USE_I18N')
+
+USE_L10N = True
 
 # Application definition
 
@@ -53,12 +58,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
-    
-# Third party apps
-'django_extensions',
-"compressor",
-'debug_toolbar' if    DEBUG_TOOLBAR_ENABLE else None,
+
+    # Third party apps
+    'django_extensions',
+    "compressor",
+    'debug_toolbar' if DEBUG_TOOLBAR_ENABLE else None,
 ]
 
 MIDDLEWARE = [
@@ -71,12 +75,12 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 if DEBUG_TOOLBAR_ENABLE:
-        MIDDLEWARE = MIDDLEWARE + [
+    MIDDLEWARE = MIDDLEWARE + [
         #  include the Debug Toolbar middleware as early as possible in the list. However, it must come after any other middleware that encodes the response’s content, such as GZipMiddleware.
         # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html
         'debug_toolbar.middleware.DebugToolbarMiddleware',
-        
-        ]
+
+    ]
 
 if USE_I18N:
     MIDDLEWARE = [y
@@ -84,17 +88,17 @@ if USE_I18N:
                   for y in (('django.middleware.locale.LocaleMiddleware', x)
                             if MIDDLEWARE[i - 1] == 'django.contrib.sessions.middleware.SessionMiddleware'
                             else (x,))]
-                            
-  # https://django-debug-toolbar.readthedocs.org
+
+# https://django-debug-toolbar.readthedocs.org
 DEBUG_TOOLBAR_CONFIG = {
     'SHOW_TEMPLATE_CONTEXT': True,
     'ENABLE_STACKTRACES': True,
-    'SQL_WARNING_THRESHOLD': 100, # milliseconds
+    'SQL_WARNING_THRESHOLD': 100,  # milliseconds
     'JQUERY_URL': "https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js",
     # only for super user
     # "SHOW_TOOLBAR_CALLBACK": lambda request: not request.is_ajax() and request.user and request.user.is_superuser
-}                          
- DEBUG_TOOLBAR_PANELS = [
+}
+DEBUG_TOOLBAR_PANELS = [
     'debug_toolbar.panels.versions.VersionsPanel',
     'debug_toolbar.panels.timer.TimerPanel',
     'debug_toolbar.panels.settings.SettingsPanel',
@@ -107,7 +111,7 @@ DEBUG_TOOLBAR_CONFIG = {
     'debug_toolbar.panels.signals.SignalsPanel',
     'debug_toolbar.panels.logging.LoggingPanel',
     'debug_toolbar.panels.redirects.RedirectsPanel',
-]                           
+]
 
 ROOT_URLCONF = '{{ project_name }}.urls'
 
@@ -115,7 +119,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-        	os.path.join(BASE_DIR, 'project_templates'),
+            os.path.join(BASE_DIR, 'project_templates'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -164,19 +168,15 @@ TIME_ZONE = 'UTC'
 # LANGUAGE_CODE = 'zh-Hans'
 
 from django.utils.translation import ugettext_lazy as _
+
 LANGUAGES = (
     ('en', _('English')),
     ('zh-cn', _('Chinese')),
     # ('zh', '简体中文'),
-    # ('zh-cn', '简体中文'), 
+    # ('zh-cn', '简体中文'),
     # ('zh-tw', '繁體中文'),
     # ('de', _('German')),
 )
-
-
-USE_I18N = env('DJANGO_USE_I18N')
-
-USE_L10N = True
 
 public_root = root.path('public/')
 
@@ -198,7 +198,7 @@ STATICFILES_DIRS = (
 #    location ^~ /static {
 #           alias /project/path/www/;
 #     }
-STATIC_ROOT =  public_root('static')
+STATIC_ROOT = public_root('static')
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
@@ -213,7 +213,6 @@ PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
     'django.contrib.auth.hashers.BCryptPasswordHasher',
 ]
-
 
 # SESSION_COOKIE_SECURE = False
 # SECURE_BROWSER_XSS_FILTER = False
@@ -255,8 +254,6 @@ if SENTRY_DSN:
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 DATABASES = {
-        'default': env.db(), # Raises ImproperlyConfigured exception if DATABASE_URL not in os.environ
+    'default': env.db(),  # Raises ImproperlyConfigured exception if DATABASE_URL not in os.environ
     'extra': env.db('SQLITE_URL', default='sqlite:////tmp/my-tmp-sqlite.db')
 }
-
-
