@@ -52,12 +52,11 @@ project_name=<project_name>
 # if using mysql
 $ sudo apt-get install libmysqlclient-dev
 
-$ django-admin.py startproject \
-  --template=https://github.com/scil/django-project-template-1/archive/master.zip \
-  --name=Procfile \
-  --extension=py,md,html,txt,conf \
-  $project_name
+sudo pip3 install  pipenv  Django==2.1.7
 
+django-admin.py startproject  --template=https://github.com/scil/django-project-template-1/archive/master.zip  --name=example.env  --extension=py,md,html,txt,conf  $project_name  
+
+cd $project_name
 $  cd $project_name
 
 $ mv example.env .env
