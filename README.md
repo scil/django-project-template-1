@@ -14,6 +14,7 @@ This is a simple Django 2.0+ project template with my preferred setup. Most Djan
 
 ## Features added by scil
 
+- wsgi server [bjoern](https://github.com/jonashaag/bjoern) or gunicorn ( with systemd conf )
 - [direnv](https://github.com/direnv/direnv)
 - Django-environ
 - add dir project_templates which holds templates used by whole project
@@ -53,7 +54,10 @@ project_name=<project_name>
 # if using mysql
 sudo apt-get install libmysqlclient-dev
 
-sudo apt-get install direnv
+# if using WSGI Server [bjoern](https://github.com/jonashaag/bjoern)
+sudo apt-get install -y libev-dev
+
+sudo apt-get install -y direnv
 
 sudo pip3 install  pipenv  Django==2.1.7
 
@@ -66,6 +70,7 @@ mv example.env .env
 
 # edit Pipfile
 #   remove psycopg2 or mysqlclient if PostgreSQL or MySql is not needed
+#   remove bjoern or gunicorn, left one server
 #   use url= "https://pypi.douban.com/simple"  if in China
 vi Pipfile
 
