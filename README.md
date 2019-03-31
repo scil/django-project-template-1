@@ -82,7 +82,8 @@ LDFLAGS=-L/usr/local/lib CFLAGS=-I/usr/local/include pipenv install --dev
 echo . /home/vagrant/.local/share/virtualenvs/${project_name}-<...>/bin/activate > .envrc
 direnv allow
 
-pipenv run python manage.py collectstatic
+# copy static files to `STATIC_ROOT = public_root('static')`
+python manage.py collectstatic
 ```
 
 ## Environment variables

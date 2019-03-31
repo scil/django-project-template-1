@@ -12,9 +12,9 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import environ
 
-root = environ.Path(__file__) - 3  # three folder back (/a/b/c/ - 3 = /)
+root = environ.Path(__file__) - 2  # three folder back (/a/b/c/ - 3 = /)
 env = environ.Env(DEBUG=(bool, False), )  # set default values and casting
-environ.Env.read_env()  # reading .env file
+environ.Env.read_env( root('.env') )  # reading .env file
 
 BASE_DIR = root()
 
@@ -29,7 +29,7 @@ DEBUG = env('DJANGO_DEBUG')
 
 DEBUG_TOOLBAR_ENABLE = env('DJANGO_DEBUG_TOOLBAR_ENABLE')
 
-COMPRESS_ENABLED = env('DJANGO_COMPRESS_ENABLED', not DEBUG)
+COMPRESS_ENABLED = env('DJANGO_COMPRESS_ENABLED', default = not DEBUG)
 
 ALLOWED_HOSTS = [
     '*',
@@ -136,7 +136,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_DIR, 'project_templates'),
+            root('project_templates'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -173,8 +173,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 public_root = root.path('public/')
 
-# MEDIA_ROOT = public_root('media')
-# MEDIA_URL = '/media/'
+ MEDIA_ROOT = public_root('media')
+ MEDIA_URL = '/media/'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
@@ -182,7 +182,7 @@ public_root = root.path('public/')
 STATIC_URL = '/static/'
 #  list of folders where Django will search for additional static files aside from the static folder of each app installed
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "project_static"),
+    root("project_static"),
     # '/var/www/static/',
 )
 # the folder where static files will be stored after using manage.py collectstatic
