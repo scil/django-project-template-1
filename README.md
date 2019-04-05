@@ -63,6 +63,8 @@ sudo apt-get install -y direnv
 
 sudo pip3 install  pipenv  Django==2.1.7
 
+pipenv shell
+
 django-admin.py startproject  --template=https://github.com/scil/django-project-template-1/archive/master.zip \
  --name=example.env  --extension=py,md,html,txt,conf  $project_name  
 
