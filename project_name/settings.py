@@ -63,9 +63,10 @@ from django.utils.translation import ugettext_lazy as _
 LANGUAGES = (
     ('en', _('English')),
     ('zh-cn', _('Chinese')),
+    ('zh-hans', '中文简体'),
     # ('zh', '简体中文'),
-    # ('zh-cn', '简体中文'),
-    # ('zh-tw', '繁體中文'),
+    # ('zh-cn', '大陆简体中文'),
+    # ('zh-tw', '台湾繁體中文'),
     # ('de', _('German')),
 )
 
