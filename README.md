@@ -17,6 +17,7 @@ This is a simple Django 2.0+ project template with my preferred setup. Most Djan
 - wsgi server [bjoern](https://github.com/jonashaag/bjoern) or gunicorn ( with systemd conf )
 - [direnv](https://github.com/direnv/direnv)
 - Django-environ
+- use .env in manage.py to allow 'DJANGO_SETTINGS_MODULE' used in .env
 - add dir project_templates which holds templates used by whole project
 - systemd unit file to run pipenv and gunicorn with socket. 
 - [Argon2](https://docs.djangoproject.com/en/2.1/topics/auth/passwords/#using-argon2-with-django) to hash the passwords
