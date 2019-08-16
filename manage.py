@@ -5,8 +5,8 @@ import sys
 def main():
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', '{{ project_name }}.settings')
     
+    # hack scil
     import environ
-
     root = environ.Path(__file__) - 1
     env = environ.Env(DEBUG=(bool, False), )  # set default values and casting
     environ.Env.read_env(root('.env'))  # reading .env file
