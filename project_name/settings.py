@@ -16,6 +16,17 @@ root = environ.Path(__file__) - 2  # three folder back (/a/b/c/ - 3 = /)
 env = environ.Env(DEBUG=(bool, False), )  # set default values and casting
 environ.Env.read_env( root('.env') )  # reading .env file
 
+# load basic configurations
+try:
+    env = json.load(open(os.path.join(BASE_DIR, 'resources', 'env.json')))
+except (FileNotFoundError, json.JSONDecodeError):
+    env = {
+        'django_secret_key': os.environ['DJANGO_SECRET_KEY'],
+        'django_debug': eval(os.environ.get('DJANGO_DEBUG', 'false').title()),
+        'database_url': os.environ.get('DATABASE_URL', 'sqlite:///db.sqlite3'),
+        'sentry_dsn': os.environ.get('SENTRY_DSN'),  # optional
+    }
+
 BASE_DIR = root()
 
 # Quick-start development settings - unsuitable for production
@@ -233,9 +244,6 @@ REST_FRAMEWORK = {
     'DEFAULT_PARSER_CLASSES': (
         'djangorestframework_camel_case.parser.CamelCaseJSONParser',
         'rest_framework.parsers.JSONParser',
-    ),
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'apps.authentication.BearerTokenAuthentication',
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 100,

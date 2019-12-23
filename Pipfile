@@ -9,26 +9,31 @@ url= "http://pypi.douban.com/simple"
 verify_ssl = false
 
 [dev-packages]
-Werkzeug = "==0.15.1"
+Werkzeug = "==0.16.0"
 ipython = "*"
 factory-boy = "*"
 codecov = {version = "*", sys_platform = "== 'linux'"}
 coverage = "*"
+django-debug-toolbar = "==2.1"
 
 [packages]
+<<<<<<< HEAD
 bjoern = {version = "*", sys_platform = "== 'linux'"}
 gunicorn = "*"
 django-compressor = "*"
 django-debug-toolbar = "==1.11"
 django-environ = "*"
-django-extensions = "==2.1.6"
+django-extensions = "==2.2.5"
 djangorestframework = "*"
 djangorestframework-camel-case = "*"
-Django = "==2.1.7"
+#Django = "==2.1.7"
+Django = "==3.0.1"
 # [Argon2](https://docs.djangoproject.com/en/2.1/topics/auth/passwords/#using-argon2-with-django) to hash the passwords
 argon2-cffi = {version="*", index="py"}
 mysqlclient = "*"
-psycopg2-binary = "==2.7.7"
-whitenoise = "==4.1.2"
+psycopg2-binary = "==2.8.4"
+whitenoise = "==5.0.1"
+bjoern = "*"
+dj-database-url = "==0.5.0"
 sentry-sdk = "*"
 ipaddress = "*"
