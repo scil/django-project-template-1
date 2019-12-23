@@ -10,22 +10,26 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/{{ docs_version }}/ref/settings/
 """
 
+"""# if env is in resources/env.json :
+# https://github.com/key/django-project-template/blob/master/resources/env.json
+# load basic configurations
+try:
+    env = json.load(open(os.path.join(base_dir, 'resources', 'env.json')))
+except (filenotfounderror, json.jsondecodeerror):
+    env = {
+        'django_secret_key': os.environ['django_secret_key'],
+        'django_debug': eval(os.environ.get('django_debug', 'false').title()),
+        'database_url': os.environ.get('database_url', 'sqlite:///db.sqlite3'),
+        'sentry_dsn': os.environ.get('sentry_dsn'),  # optional
+    }
+"""    
+
 import environ
 
 root = environ.Path(__file__) - 2  # three folder back (/a/b/c/ - 3 = /)
 env = environ.Env(DEBUG=(bool, False), )  # set default values and casting
 environ.Env.read_env( root('.env') )  # reading .env file
 
-# load basic configurations
-try:
-    env = json.load(open(os.path.join(BASE_DIR, 'resources', 'env.json')))
-except (FileNotFoundError, json.JSONDecodeError):
-    env = {
-        'django_secret_key': os.environ['DJANGO_SECRET_KEY'],
-        'django_debug': eval(os.environ.get('DJANGO_DEBUG', 'false').title()),
-        'database_url': os.environ.get('DATABASE_URL', 'sqlite:///db.sqlite3'),
-        'sentry_dsn': os.environ.get('SENTRY_DSN'),  # optional
-    }
 
 BASE_DIR = root()
 

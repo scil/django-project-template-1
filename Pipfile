@@ -17,7 +17,6 @@ coverage = "*"
 django-debug-toolbar = "==2.1"
 
 [packages]
-<<<<<<< HEAD
 bjoern = {version = "*", sys_platform = "== 'linux'"}
 gunicorn = "*"
 django-compressor = "*"
@@ -33,7 +32,5 @@ argon2-cffi = {version="*", index="py"}
 mysqlclient = "*"
 psycopg2-binary = "==2.8.4"
 whitenoise = "==5.0.1"
-bjoern = "*"
-dj-database-url = "==0.5.0"
 sentry-sdk = "*"
 ipaddress = "*"
