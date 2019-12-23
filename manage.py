@@ -6,7 +6,7 @@ def main():
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', '{{ project_name }}.settings')
     
     # hack scil
-    # to use this var DJANGO_SETTINGS_MODULE
+    # to use this var DJANGO_SETTINGS_MODULE.  the last setting on line 6 will be overwrited.
     import environ
     root = environ.Path(__file__) - 1
     env = environ.Env(DEBUG=(bool, False), )  # set default values and casting
