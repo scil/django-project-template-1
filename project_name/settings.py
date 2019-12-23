@@ -24,8 +24,9 @@ except (filenotfounderror, json.jsondecodeerror):
     }
 """    
 
+# maybe loading .env is not necessary,   pipenv can be used to load  .env
+#   https://github.com/jpadilla/django-project-template/commit/43ede725be1f9fbb4a0e7f25ad4ad77604feb8cb
 import environ
-
 root = environ.Path(__file__) - 2  # three folder back (/a/b/c/ - 3 = /)
 env = environ.Env(DEBUG=(bool, False), )  # set default values and casting
 environ.Env.read_env( root('.env') )  # reading .env file
