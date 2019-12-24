@@ -19,6 +19,7 @@ This is a simple Django 2.0+ project template with my preferred setup. Most Djan
 - Django-environ
 - load .env in manage.py to allow 'DJANGO_SETTINGS_MODULE' used in .env
 - add dir project_templates which holds templates used by whole project
+- two setting way: settings.py or settings dir
 - systemd unit file to run pipenv and gunicorn with socket. 
 - [Argon2](https://docs.djangoproject.com/en/2.1/topics/auth/passwords/#using-argon2-with-django) to hash the passwords
 
